@@ -25,9 +25,6 @@ export function Header() {
   return (
     // Header container with padding and border for structure
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      {/* The NavigationMenu component from shadcn/ui provides great foundation.
-        We're adapting it for the layout requirements.
-      */}
       <div className="container flex h-16 items-center">
         <NavigationMenu className="w-full max-w-none justify-start">
           <NavigationMenuList className="flex-1 space-x-0 w-full justify-between gap-1 md:justify-start">
@@ -49,7 +46,7 @@ export function Header() {
                 </Link>
               </NavigationMenuLink>
               <span className="font-semibold text-sm">
-                Vercel Daily
+                Guzzul Daily
               </span>
             </NavigationMenuItem>
 
