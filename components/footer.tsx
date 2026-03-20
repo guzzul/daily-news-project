@@ -22,22 +22,22 @@ export function Footer() {
           {/* Navigation Links */}
           <nav className="flex flex-wrap justify-center gap-6 text-sm font-medium text-muted-foreground">
             <Link
-              href="/about"
+              href="#"
               className="hover:text-primary transition-colors"
             >
               About
             </Link>
             <Link
-              href="/careers"
+              href="#"
               className="hover:text-primary transition-colors"
             >
               Careers
             </Link>
-            <Link href="/blog" className="hover:text-primary transition-colors">
+            <Link href="#blog" className="hover:text-primary transition-colors">
               Blog
             </Link>
             <Link
-              href="/contact"
+              href="#contact"
               className="hover:text-primary transition-colors"
             >
               Contact
