@@ -1,7 +1,7 @@
 import { cacheLife } from "next/cache";
 import { apiFetch } from "../api/client";
 import { BreakingNewsResponseSchema } from "../schemas/breaking-news.schema";
-import { BASE_URL } from "../consts";
+import { BASE_URL, DEFAULT_RETRIES } from "../consts";
 
 export async function getBreakingNews() {
   'use cache';
@@ -12,6 +12,6 @@ export async function getBreakingNews() {
     next: {
       tags: ["breaking-news"],
     },
-    retries: 2,
+    retries: DEFAULT_RETRIES,
   });
 }

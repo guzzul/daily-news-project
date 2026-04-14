@@ -39,7 +39,6 @@ export async function apiFetch<T>(
     }
 
     const json = await res.json();
-
     const parsed = schema.safeParse(json);
 
     if (!parsed.success) {

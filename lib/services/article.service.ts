@@ -1,32 +1,28 @@
+import { cacheLife } from "next/cache";
 import { apiFetch } from "../api/client";
-import { ArticleResponseSchema } from "../schemas/article.schema";
-import { BASE_URL } from "../consts";
+import { ArticleResponseSchema, ArticleListResponseSchema } from "../schemas/article.schema";
+import { BASE_URL, DEFAULT_RETRIES } from "../consts";
 
-/**
- * Server-side fetch (RSC)
- */
-export async function getArticles() {
-  return apiFetch(`${BASE_URL}/articles`, {
-    schema: ArticleResponseSchema,
-
-    // Next.js caching
+export async function getFeaturedArticle() {
+  'use cache';
+  cacheLife('minutes');
+  
+  return apiFetch(`${BASE_URL}/articles?featured=true&category=customers&limit=1`, {
+    schema: ArticleListResponseSchema,
     next: {
-      revalidate: 60, // ISR
-      tags: ["articles"],
+      tags: ["featured-article"],
     },
-
-    retries: 2,
+    retries: DEFAULT_RETRIES,
   });
 }
 
-/**
- * No-cache version (dynamic)
- */
-export async function getArticlesNoCache() {
+export async function getArticles() {
   return apiFetch(`${BASE_URL}/articles`, {
     schema: ArticleResponseSchema,
-    init: {
-      cache: "no-store",
+    next: {
+      tags: ["articles"],
     },
+
+    retries: DEFAULT_RETRIES,
   });
 }

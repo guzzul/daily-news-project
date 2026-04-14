@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ContentBlockSchema } from "./content-block";
-import { AuthorSchema } from "./author";
+import { ContentBlockSchema } from "./content-block.schema";
+import { AuthorSchema } from "./author.schema";
 
 export const ArticleSchema = z.object({
   id: z.string(),
@@ -39,3 +39,5 @@ export const ArticleResponseSchema = z.object({
   success: z.boolean(),
   data: ArticleSchema,
 });
+
+export type FeaturedArticle = z.infer<typeof ArticleListResponseSchema>["data"][0];

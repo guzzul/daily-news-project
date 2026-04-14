@@ -3,9 +3,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Newspaper, ArrowRight } from "lucide-react";
+import { FeaturedArticle } from "@/lib/schemas/article.schema";
 
-export default function NewsHero() {
-  const featuredArticleHref = "/articles/future-of-ai-architecture";
+type NewsHeroProps = {
+  featuredArticle: FeaturedArticle;
+};
+
+export default function NewsHero({ featuredArticle }: NewsHeroProps) {
+  const featuredArticleHref = featuredArticle
+    ? `/articles/${featuredArticle.slug}`
+    : "";
   return (
     <section className="relative w-full py-12 md:py-24 lg:py-18 bg-background border-b">
       <div className="container px-4 md:px-6 mx-auto">
@@ -14,18 +21,16 @@ export default function NewsHero() {
           <div className="flex flex-col justify-center space-y-6">
             <div className="space-y-4">
               <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-medium">
-                Breaking News: The Future of Tech
+                The Guzzul Daily
               </div>
               <Link href={featuredArticleHref} className="group block">
                 <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl xl:text-6xl/none">
-                  Insights that shape the{" "}
-                  <span className="text-primary">Global Narrative.</span>
+                  News and insights for modern web developers
                 </h1>
               </Link>
               <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed">
-                Stay ahead of the curve with deep-dives into economics, policy,
-                and the innovations redefining our world. Delivered fresh, every
-                single morning.
+                Changelogs, engineering deep dives, customer stories, and
+                community updates — all in one place.
               </p>
             </div>
 
@@ -63,7 +68,7 @@ export default function NewsHero() {
           >
             <div className="relative aspect-video overflow-hidden rounded-xl bg-muted lg:aspect-square">
               <Image
-                src="/api/placeholder/800/800" // Replace with your featured image
+                src={featuredArticle?.image}
                 alt="Featured Story Image"
                 fill
                 className="object-cover"
@@ -73,10 +78,10 @@ export default function NewsHero() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
                 <div className="text-white">
                   <p className="text-xs font-bold uppercase tracking-wider">
-                    Feature Story
+                    Featured Story
                   </p>
                   <h3 className="text-lg font-semibold">
-                    How AI is Reshaping Urban Architecture
+                    {featuredArticle?.title}
                   </h3>
                 </div>
               </div>
