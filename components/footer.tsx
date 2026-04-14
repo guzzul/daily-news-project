@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Twitter, Linkedin } from "lucide-react";
 
-export function Footer() {
+export async function Footer() {
+  "use cache";
   const currentYear = new Date().getFullYear();
 
   return (

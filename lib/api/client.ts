@@ -20,7 +20,7 @@ type FetchOptions<T> = {
  */
 export async function apiFetch<T>(
   url: string,
-  options: FetchOptions<T>
+  options: FetchOptions<T>,
 ): Promise<T> {
   const { schema, init, next, retries = 2 } = options;
 
@@ -43,11 +43,7 @@ export async function apiFetch<T>(
     const parsed = schema.safeParse(json);
 
     if (!parsed.success) {
-      throw new ApiError(
-        500,
-        "Invalid API response",
-        parsed.error.flatten()
-      );
+      throw new ApiError(500, "Invalid API response", parsed.error.flatten());
     }
 
     return parsed.data;

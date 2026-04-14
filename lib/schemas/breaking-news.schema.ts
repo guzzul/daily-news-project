@@ -14,3 +14,6 @@ export const BreakingNewsResponseSchema = z.object({
   success: z.boolean(),
   data: BreakingNewsSchema,
 });
+
+export type BreakingNews = z.infer<typeof BreakingNewsSchema>;
+export type BreakingNewsResponse = z.infer<typeof BreakingNewsResponseSchema>;
