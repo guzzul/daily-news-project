@@ -28,3 +28,16 @@ export async function getFeaturedArticles() {
     retries: DEFAULT_RETRIES,
   });
 }
+
+export async function getArticleBySlug(slug: string) {
+  'use cache';
+  cacheLife('hours');
+
+  return apiFetch(`${BASE_URL}/articles/${slug}`, {
+    schema: ArticleResponseSchema,
+    next: {
+      tags: [`article-${slug}`],
+    },
+    retries: DEFAULT_RETRIES,
+  });
+}

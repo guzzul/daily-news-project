@@ -28,6 +28,7 @@ const ImageBlock = z.object({
   type: z.literal("image"),
   src: z.string(),
   alt: z.string(),
+  caption: z.string().optional(),
 });
 
 const BlockquoteBlock = z.object({
@@ -46,3 +47,5 @@ export const ContentBlockSchema = z.discriminatedUnion("type", [
   ImageBlock,
   BlockquoteBlock,
 ]);
+
+export type ContentBlock = z.infer<typeof ContentBlockSchema>;

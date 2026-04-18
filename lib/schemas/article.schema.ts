@@ -43,3 +43,4 @@ export const ArticleResponseSchema = z.object({
 export type FeaturedStory = z.infer<typeof ArticleSchema>
 export type ArticleList = z.infer<typeof ArticleListResponseSchema>["data"]
 export type Article = z.infer<typeof ArticleSchema>
+export type ContentBlock = z.infer<typeof ContentBlockSchema>

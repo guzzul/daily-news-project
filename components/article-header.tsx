@@ -2,14 +2,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {Author} from "@/lib/schemas/author.schema";
 
 interface HeaderProps {
   title: string;
-  author: {
-    name: string;
-    role: string;
-    image?: string;
-  };
+  author: Author;
   date: string;
   category: string;
 }
@@ -28,12 +25,11 @@ export function ArticleHeader({ title, author, date, category }: HeaderProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-10 w-10 rounded-none border">
-            <AvatarImage src={author.image} />
+            <AvatarImage src={author.avatar} />
             <AvatarFallback className="rounded-none">{author.name[0]}</AvatarFallback>
           </Avatar>
           <div className="space-y-0.5">
             <p className="text-sm font-bold leading-none">{author.name}</p>
-            <p className="text-xs text-muted-foreground">{author.role}</p>
           </div>
         </div>
         
