@@ -11,7 +11,7 @@ export const ArticleSchema = z.object({
   category: z.string(),
   author: AuthorSchema,
   image: z.url(),
-  publishedAt: z.string(), // optionally: z.coerce.date()
+  publishedAt: z.string(),
   featured: z.boolean(),
   tags: z.array(z.string()),
 });
@@ -40,4 +40,6 @@ export const ArticleResponseSchema = z.object({
   data: ArticleSchema,
 });
 
-export type FeaturedArticle = z.infer<typeof ArticleListResponseSchema>["data"][0];
+export type FeaturedStory = z.infer<typeof ArticleSchema>
+export type ArticleList = z.infer<typeof ArticleListResponseSchema>["data"]
+export type Article = z.infer<typeof ArticleSchema>

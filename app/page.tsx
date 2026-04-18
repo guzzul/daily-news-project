@@ -2,8 +2,7 @@ import { Suspense } from "react";
 import NewsHero from "@/components/news-hero";
 import NewsBanner from "@/components/news-banner";
 import FeaturedArticles from "@/components/featured-articles";
-import { ArticleListResponseSchema } from "@/lib/schemas/article.schema";
-import { getFeaturedArticle } from "@/lib/services/article.service";
+import { getFeaturedStory, getFeaturedArticles } from "@/lib/services/article.service";
 
 export const metadata = {
   title: "Daily News - Stay Informed with the Latest Headlines",
@@ -11,9 +10,22 @@ export const metadata = {
     "Your go-to source for the latest news, in-depth analysis, and expert insights. Stay informed with our comprehensive coverage of global events, technology, business, and more.",
 };
 
+function BannerSkeleton() {
+  return (
+    <div className="w-full animate-pulse rounded-md bg-muted/50 p-4 text-center">
+      Loading breaking news...
+    </div>
+  );
+}
+
 export default async function Home() {
-  const featuredArticleList = await getFeaturedArticle();
-  const featuredArticle = featuredArticleList?.data[0];
+  const [featuredStoryList, featuredArticleList] = await Promise.all([
+    getFeaturedStory(),
+    getFeaturedArticles(),
+  ]);
+
+  const featuredStory = featuredStoryList?.data?.[0] ?? null;
+  const articles = featuredArticleList?.data ?? [];
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -21,20 +33,20 @@ export default async function Home() {
         <div className="w-full">
           <Suspense
             fallback={
-              <div className="w-full animate-pulse rounded-md bg-muted/50 p-4 text-center">
-                Loading breaking news...
-              </div>
+              <BannerSkeleton />
             }
           >
             <NewsBanner />
           </Suspense>
         </div>
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <NewsHero featuredArticle={featuredArticle}/>
+          <NewsHero featuredStory={featuredStory}/>
         </div>
-        <FeaturedArticles />
+        <FeaturedArticles articles={articles} />
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row"></div>
       </main>
     </div>
   );
 }
+
+

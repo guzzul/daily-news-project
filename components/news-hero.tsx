@@ -3,15 +3,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Newspaper, ArrowRight } from "lucide-react";
-import { FeaturedArticle } from "@/lib/schemas/article.schema";
+import { FeaturedStory } from "@/lib/schemas/article.schema";
 
 type NewsHeroProps = {
-  featuredArticle: FeaturedArticle;
+  featuredStory: FeaturedStory;
 };
 
-export default function NewsHero({ featuredArticle }: NewsHeroProps) {
-  const featuredArticleHref = featuredArticle
-    ? `/articles/${featuredArticle.slug}`
+export default function NewsHero({ featuredStory }: NewsHeroProps) {
+  const featuredStoryHref = featuredStory
+    ? `/articles/${featuredStory.slug}`
     : "";
   return (
     <section className="relative w-full py-12 md:py-24 lg:py-18 bg-background border-b">
@@ -23,7 +23,7 @@ export default function NewsHero({ featuredArticle }: NewsHeroProps) {
               <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm font-medium">
                 The Guzzul Daily
               </div>
-              <Link href={featuredArticleHref} className="group block">
+              <Link href={featuredStoryHref} className="group block">
                 <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl xl:text-6xl/none">
                   News and insights for modern web developers
                 </h1>
@@ -63,12 +63,12 @@ export default function NewsHero({ featuredArticle }: NewsHeroProps) {
 
           {/* Visual Element */}
           <Link
-            href={featuredArticleHref}
+            href={featuredStoryHref}
             className="relative group aspect-video overflow-hidden rounded-xl bg-muted lg:aspect-square"
           >
             <div className="relative aspect-video overflow-hidden rounded-xl bg-muted lg:aspect-square">
               <Image
-                src={featuredArticle?.image}
+                src={featuredStory?.image}
                 alt="Featured Story Image"
                 fill
                 className="object-cover"
@@ -81,7 +81,7 @@ export default function NewsHero({ featuredArticle }: NewsHeroProps) {
                     Featured Story
                   </p>
                   <h3 className="text-lg font-semibold">
-                    {featuredArticle?.title}
+                    {featuredStory?.title}
                   </h3>
                 </div>
               </div>

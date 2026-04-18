@@ -3,9 +3,9 @@ import { apiFetch } from "../api/client";
 import { ArticleResponseSchema, ArticleListResponseSchema } from "../schemas/article.schema";
 import { BASE_URL, DEFAULT_RETRIES } from "../consts";
 
-export async function getFeaturedArticle() {
+export async function getFeaturedStory() {
   'use cache';
-  cacheLife('minutes');
+  cacheLife('hours'); 
   
   return apiFetch(`${BASE_URL}/articles?featured=true&category=customers&limit=1`, {
     schema: ArticleListResponseSchema,
@@ -16,13 +16,15 @@ export async function getFeaturedArticle() {
   });
 }
 
-export async function getArticles() {
-  return apiFetch(`${BASE_URL}/articles`, {
-    schema: ArticleResponseSchema,
-    next: {
-      tags: ["articles"],
-    },
+export async function getFeaturedArticles() {
+  'use cache';
+  cacheLife('hours'); 
 
+  return apiFetch(`${BASE_URL}/articles?featured=true&limit=6`, {
+    schema: ArticleListResponseSchema,
+    next: {
+      tags: ["featured-articles"],
+    },
     retries: DEFAULT_RETRIES,
   });
 }
