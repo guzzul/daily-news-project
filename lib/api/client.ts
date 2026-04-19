@@ -27,7 +27,7 @@ export async function apiFetch<T>(
   const fetcher = async () => {
     const res = await fetch(url, {
       ...init,
-      next, // Next.js 16 caching
+      next,
       headers: {
         "Content-Type": "application/json",
         ...(init?.headers || {}),

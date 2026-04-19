@@ -7,10 +7,12 @@ import { cacheTag, cacheLife } from "next/cache";
 import { ArticleHeader } from "@/components/article-header";
 import { SubscribeBanner } from "@/components/subscribe-banner";
 import { ArticleContent } from "@/components/article-content";
+import { ArticleGrid } from "@/components/article-grid";
 import { Article } from "@/lib/schemas/article.schema";
 import {
   getAllArticles,
   getArticleBySlug,
+  getTrendingArticles,
 } from "@/lib/services/article.service";
 
 type ArticlePageProps = {
@@ -34,7 +36,7 @@ export async function generateMetadata({
 
     const article = response.data;
     const title = article.title;
-    const description = article.excerpt 
+    const description = article.excerpt;
 
     return {
       title,
@@ -72,9 +74,7 @@ export async function generateMetadata({
 
       // Extra SEO signals
       category: article.category,
-      keywords: [
-        ...(article.tags || []),
-      ].filter(Boolean),
+      keywords: [...(article.tags || [])].filter(Boolean),
     };
   } catch (e) {
     // Fail-safe so build/runtime doesn't break
@@ -123,14 +123,19 @@ async function ArticleDetails({ params }: ArticlePageProps) {
   const { slug } = await params;
   cacheTag("articles", `article-${slug}`);
 
-  const { response, error } = await getArticleBySlug(slug);
+  // Fetch article and trending articles in parallel to optimize load time.
+  const [
+    { response: articleResponse, error: articleError },
+    { response: trendingResponse, error: trendingError },
+  ] = await Promise.all([getArticleBySlug(slug), getTrendingArticles()]);
 
   // If there's an error fetching the article or the article doesn't exist, show a 404 page.
-  if (error || !response?.data) {
+  if (articleError || !articleResponse?.data) {
     notFound();
   }
 
-  const article = response?.data;
+  const article = articleResponse?.data;
+  const trendingArticles = trendingResponse?.data?.slice(0, 3) || [];
   const isSubscribed = false;
 
   return (
@@ -152,10 +157,15 @@ async function ArticleDetails({ params }: ArticlePageProps) {
         />
       </div>
 
-      {/* 3. Article Content - Using Tailwind Typography (prose) */}
+      {/* Article Content - Using Tailwind Typography (prose) */}
       <ArticleContent content={article.content} />
 
-      {/* 4. Conditional Subscribe CTA */}
+      {/* Trending Articles */}
+      {trendingArticles.length > 0 && (
+        <ArticleGrid label="Trending Now" articles={trendingArticles} />
+      )}
+
+      {/* Conditional Subscribe CTA */}
       {!isSubscribed && <SubscribeBanner />}
 
       <div className="mt-12 pt-8 border-t flex justify-center">

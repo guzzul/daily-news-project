@@ -3,6 +3,7 @@ import { apiFetch } from "../api/client";
 import {
   ArticleResponseSchema,
   ArticleListResponseSchema,
+  TrendingArticlesResponseSchema,
 } from "../schemas/article.schema";
 import { BASE_URL, DEFAULT_RETRIES } from "../consts";
 
@@ -67,5 +68,21 @@ export async function getAllArticles() {
     console.error("Error fetching all articles", err);
     return { response: null, error: err };
   }
+}
 
+export async function getTrendingArticles() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("articles", "trending-articles");
+  
+  try {
+    const response = await apiFetch(`${BASE_URL}/articles/trending`, {
+      schema: TrendingArticlesResponseSchema,
+      retries: DEFAULT_RETRIES,
+    });
+    return { response, error: null };
+  } catch (err) {
+    console.error("Error fetching trending articles", err);
+    return { response: null, error: err };
+  }
 }

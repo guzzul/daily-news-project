@@ -40,7 +40,13 @@ export const ArticleResponseSchema = z.object({
   data: ArticleSchema,
 });
 
+export const TrendingArticlesResponseSchema = z.object({
+  success: z.boolean(),
+  data: z.array(ArticleSchema),
+});
+
 export type FeaturedStory = z.infer<typeof ArticleSchema>
 export type ArticleList = z.infer<typeof ArticleListResponseSchema>["data"]
 export type Article = z.infer<typeof ArticleSchema>
 export type ContentBlock = z.infer<typeof ContentBlockSchema>
+export type TrendingArticles = z.infer<typeof TrendingArticlesResponseSchema>["data"]

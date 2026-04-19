@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import NewsHero from "@/components/news-hero";
 import NewsBanner from "@/components/news-banner";
-import FeaturedArticles from "@/components/featured-articles";
+import { ArticleGrid }  from "@/components/article-grid";
 import {
   getFeaturedStory,
   getFeaturedArticles,
@@ -41,7 +41,7 @@ export default async function Home() {
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <NewsHero featuredStory={featuredStory} />
         </div>
-        <FeaturedArticles articles={articles} />
+        <ArticleGrid label="Featured Articles" articles={articles} />
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row"></div>
       </main>
     </div>
