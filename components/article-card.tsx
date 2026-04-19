@@ -11,7 +11,7 @@ interface ArticleProps {
 }
 
 export function ArticleCard({ article }: ArticleProps) {
-  const [year, month, day] = article.publishedAt?.split('T')[0].split('-');
+  const [year, month, day] = article?.publishedAt?.split('T')[0].split('-');
   const dateStr = `${month}/${day}/${year}`;
 
   return (

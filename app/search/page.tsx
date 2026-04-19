@@ -4,6 +4,8 @@ import { ArticleCard } from "@/components/article-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchCode } from "lucide-react";
 
+import { getCategories } from "@/lib/services/category.service";
+
 // Mock Data
 const ALL_ARTICLES = [
   {
@@ -97,9 +99,7 @@ async function SearchResults({
         {isSearching ? `Search Results (${results.length})` : "Recent Stories"}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {results.map((article) => (
-          <ArticleCard key={article.id} article={article} />
-        ))}
+        {/* <ArticleCard key={article.id} article={article} />  */}
       </div>
     </div>
   );
@@ -120,14 +120,30 @@ function SearchLoading() {
   );
 }
 
-export default async function SearchPage({
+export default function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string; category?: string };
+  searchParams: Promise<{ q?: string; c?: string }>;
 }) {
-  const params = await searchParams;
-  const query = params.q || "";
-  const category = params.category || "all";
+  return (
+    <Suspense fallback={<div>Loading search...</div>}>
+      <SearchContainer searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+export async function SearchContainer({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; c?: string }>;
+}) {
+  const { q, c } = await searchParams;
+  const query = q || "";
+  const category = c || "all";
+
+  // Fetch categories for the filter dropdown
+  const { response: categoriesResponse } = await getCategories();
+  const categories = categoriesResponse?.data || [];
 
   return (
     <main className="container max-w-6xl mx-auto px-4 py-12">
@@ -140,9 +156,11 @@ export default async function SearchPage({
         </p>
       </header>
 
-      <SearchFilters />
+      <Suspense fallback={<div>Loading filters...</div>}>
+        <SearchFilters categories={categories} />
+      </Suspense>
 
-      <Suspense key={query + category} fallback={<SearchLoading />}>
+      <Suspense key={category + query} fallback={<SearchLoading />}>
         <SearchResults query={query} category={category} />
       </Suspense>
     </main>

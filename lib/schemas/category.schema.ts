@@ -10,3 +10,6 @@ export const CategoryListResponseSchema = z.object({
   success: z.boolean(),
   data: z.array(CategorySchema),
 });
+
+export type Category = z.infer<typeof CategorySchema>;
+export type CategoryList = z.infer<typeof CategoryListResponseSchema>["data"];

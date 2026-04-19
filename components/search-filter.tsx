@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function SearchFilters() {
+import { CategoryList } from "@/lib/schemas/category.schema";
+
+type SearchFiltersProps = {
+  categories: CategoryList;
+};
+
+export function SearchFilters({ categories }: SearchFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -21,7 +27,17 @@ export function SearchFilters() {
 
   // Local state for the input to allow fast typing
   const [term, setTerm] = useState(searchParams.get("q") || "");
-  const currentCategory = searchParams.get("category") || "all";
+  const currentCategory = searchParams.get("c") || "all";
+
+  // Combine "All Categories" with the props data
+  // useMemo ensures we don't re-calculate this unless categories change
+  const categoryOptions = useMemo(() => {
+    const formattedCategories = categories.map(({ name, slug }) => ({
+      name,
+      slug,
+    }));
+    return [{ name: "All Categories", slug: "all" }, ...formattedCategories];
+  }, [categories]);
 
   // Sync URL function
   const updateSearch = (query?: string, category?: string) => {
@@ -79,11 +95,11 @@ export function SearchFilters() {
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent className="rounded-none">
-          <SelectItem value="all">All Categories</SelectItem>
-          <SelectItem value="technology">Technology</SelectItem>
-          <SelectItem value="finance">Finance</SelectItem>
-          <SelectItem value="policy">Policy</SelectItem>
-          <SelectItem value="lifestyle">Lifestyle</SelectItem>
+          {categoryOptions.map((category) => (
+            <SelectItem key={category.slug} value={category.slug}>
+              {category.name}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
