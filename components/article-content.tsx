@@ -40,7 +40,7 @@ function renderMarkdown({ text }: { text: string }) {
   );
 }
 
-export default function ArticleContent({
+export function ArticleContent({
   content,
 }: {
   content: ContentBlock[];
