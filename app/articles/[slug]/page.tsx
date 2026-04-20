@@ -111,13 +111,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
-        <ArticleDetails params={params} />
+        <ArticleWrapper params={params} />
       </Suspense>
     </article>
   );
 }
 
-async function ArticleDetails({ params }: ArticlePageProps) {
+async function ArticleWrapper({ params }: ArticlePageProps) {
   "use cache";
   cacheLife("days");
   const { slug } = await params;

@@ -25,10 +25,6 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  // Local state for the input to allow fast typing
-  const [term, setTerm] = useState(searchParams.get("q") || "");
-  const currentCategory = searchParams.get("c") || "all";
-
   // Combine "All Categories" with the props data
   // useMemo ensures we don't re-calculate this unless categories change
   const categoryOptions = useMemo(() => {
@@ -39,13 +35,17 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
     return [{ name: "All Categories", slug: "all" }, ...formattedCategories];
   }, [categories]);
 
+  // Local state for the input to allow fast typing
+  const [term, setTerm] = useState(searchParams.get("query") || "");
+  const currentCategory = searchParams.get("category") || "all";
+
   // Sync URL function
   const updateSearch = (query?: string, category?: string) => {
     const params = new URLSearchParams(searchParams);
 
     if (query !== undefined) {
-      if (query) params.set("q", query);
-      else params.delete("q");
+      if (query) params.set("query", query);
+      else params.delete("query");
     }
 
     if (category !== undefined) {

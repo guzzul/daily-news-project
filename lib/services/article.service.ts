@@ -62,7 +62,7 @@ export async function getAllArticles() {
       schema: ArticleListResponseSchema,
       retries: DEFAULT_RETRIES,
     });
-    return {response, error: null};
+    return { response, error: null };
   }
   catch (err) {
     console.error("Error fetching all articles", err);
@@ -83,6 +83,31 @@ export async function getTrendingArticles() {
     return { response, error: null };
   } catch (err) {
     console.error("Error fetching trending articles", err);
+    return { response: null, error: err };
+  }
+}
+
+
+// No caching for search results since they can vary widely and may not be reused often
+export async function searchArticles(search?: string, category?: string) {
+  const params: Record<string, string> = {};
+  if (search) params.search = search;
+  if (category && category !== "all") params.category = category;
+  params.limit = "6";
+
+  const queryString = new URLSearchParams(params).toString();
+  const baseUrl = `${BASE_URL}/articles`;
+  const fullUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+
+  console.log("Searching articles with URL:", fullUrl);
+  try {
+    const response = await apiFetch(fullUrl, {
+      schema: ArticleListResponseSchema,
+      retries: DEFAULT_RETRIES,
+    });
+    return { response, error: null };
+  } catch (err) {
+    console.error("Error searching articles", err);
     return { response: null, error: err };
   }
 }
