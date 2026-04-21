@@ -99,19 +99,21 @@ export async function generateStaticParams() {
  * Page Shell
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  const { slug } = await params;
+  //const { slug } = await params;
 
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
-        <ArticleWrapper slug={slug} />
+        <ArticleWrapper params={params} />
       </Suspense>
     </article>
   );
 }
 
-async function ArticleWrapper({ slug }: { slug: string }) {
+async function ArticleWrapper({ params }: ArticlePageProps) {
   "use cache";
+  const { slug } = await params;
+
   cacheLife("days");
   cacheTag("articles", `article-${slug}`);
 
@@ -164,11 +166,6 @@ async function ArticleWrapper({ slug }: { slug: string }) {
       {/* Conditional Subscribe CTA */}
       {!isSubscribed && <SubscribeBanner />}
 
-      <div className="mt-12 pt-8 border-t flex justify-center">
-        <p className="text-sm text-muted-foreground font-serif italic">
-          End of Story.
-        </p>
-      </div>
     </article>
   );
 }

@@ -7,10 +7,8 @@ import { cacheTag, cacheLife } from "next/cache";
 import { ArticleHeader } from "@/components/article-header";
 import { SubscribeBanner } from "@/components/subscribe-banner";
 import { ArticleContent } from "@/components/article-content";
-import { ArticleGrid } from "@/components/article-grid";
 import {
   getArticleBySlug,
-  getTrendingArticles,
 } from "@/lib/services/article.service";
 
 type ArticlePageProps = {
@@ -80,13 +78,13 @@ export default async function ArticlePreviewPage({ params }: ArticlePageProps) {
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
-        <ArticleWrapper params={params} />
+        <ArticlePreviewWrapper params={params} />
       </Suspense>
     </article>
   );
 }
 
-async function ArticleWrapper({ params }: ArticlePageProps) {
+async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
   "use cache";
   const { slug } = await params;
   
@@ -94,18 +92,14 @@ async function ArticleWrapper({ params }: ArticlePageProps) {
   cacheTag("articles", `article-${slug}-preview`);
 
   // Fetch article and trending articles in parallel to optimize load time.
-  const [
-    { response: articleResponse, error: articleError },
-    { response: trendingResponse, error: trendingError },
-  ] = await Promise.all([getArticleBySlug(slug), getTrendingArticles()]);
+  const { response, error } = await getArticleBySlug(slug);
 
   // If there's an error fetching the article or the article doesn't exist, show a 404 page.
-  if (articleError || !articleResponse?.data) {
+  if (error || !response?.data) {
     notFound();
   }
 
-  const article = articleResponse?.data;
-  const trendingArticles = trendingResponse?.data?.slice(0, 3) || [];
+  const article = response?.data;
   const isSubscribed = false;
 
   return (
@@ -134,19 +128,9 @@ async function ArticleWrapper({ params }: ArticlePageProps) {
         isPreview={true}
       />
 
-      {/* Trending Articles */}
-      {trendingArticles.length > 0 && (
-        <ArticleGrid label="Trending Now" articles={trendingArticles} />
-      )}
-
       {/* Conditional Subscribe CTA */}
       {!isSubscribed && <SubscribeBanner />}
 
-      <div className="mt-12 pt-8 border-t flex justify-center">
-        <p className="text-sm text-muted-foreground font-serif italic">
-          End of Story.
-        </p>
-      </div>
     </article>
   );
 }
