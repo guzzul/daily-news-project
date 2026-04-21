@@ -25,8 +25,6 @@ export async function apiFetch<T>(
   options: FetchOptions<T>,
 ): Promise<T> {
   const { schema, init, next, retries = 2 } = options;
-  console.log(`Fetching URL: ${url} with options:`, { init, next, retries });
-
   const fetcher = async () => {
     const res = await fetch(url, {
       ...init,

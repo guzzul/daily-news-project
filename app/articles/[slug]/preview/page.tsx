@@ -8,9 +8,7 @@ import { ArticleHeader } from "@/components/article-header";
 import { SubscribeBanner } from "@/components/subscribe-banner";
 import { ArticleContent } from "@/components/article-content";
 import { ArticleGrid } from "@/components/article-grid";
-import { Article } from "@/lib/schemas/article.schema";
 import {
-  getAllArticles,
   getArticleBySlug,
   getTrendingArticles,
 } from "@/lib/services/article.service";
@@ -43,7 +41,7 @@ export async function generateMetadata({
       description,
 
       alternates: {
-        canonical: `/articles/${slug}`,
+        canonical: `/articles/${slug}/preview`,
       },
 
       // Open Graph (Facebook, LinkedIn, etc.)
@@ -51,7 +49,7 @@ export async function generateMetadata({
         title,
         description,
         type: "article",
-        url: `/articles/${slug}`,
+        url: `/articles/${slug}/preview`,
         publishedTime: article.publishedAt,
         authors: article.author ? [article.author.name] : [],
         images: [
@@ -76,44 +74,24 @@ export async function generateMetadata({
 }
 
 /**
- * Static Params {SSG}
- */
-export async function generateStaticParams() {
-  const { response, error } = await getAllArticles();
-
-  // If the API is down during build, return an empty array.
-  // This prevents the build from crashing.
-  if (error || !response?.data) {
-    console.warn(
-      "Could not fetch articles for static params. Falling back to dynamic generation.",
-    );
-    return [];
-  }
-
-  return response.data.map((article: Article) => ({
-    slug: article.slug,
-  }));
-}
-
-/**
  * Page Shell
  */
-export default async function ArticlePage({ params }: ArticlePageProps) {
-  const { slug } = await params;
-
+export default async function ArticlePreviewPage({ params }: ArticlePageProps) {
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
-        <ArticleWrapper slug={slug} />
+        <ArticleWrapper params={params} />
       </Suspense>
     </article>
   );
 }
 
-async function ArticleWrapper({ slug }: { slug: string }) {
+async function ArticleWrapper({ params }: ArticlePageProps) {
   "use cache";
+  const { slug } = await params;
+  
   cacheLife("days");
-  cacheTag("articles", `article-${slug}`);
+  cacheTag("articles", `article-${slug}-preview`);
 
   // Fetch article and trending articles in parallel to optimize load time.
   const [
@@ -153,7 +131,7 @@ async function ArticleWrapper({ slug }: { slug: string }) {
       <ArticleContent
         content={article.content}
         excerpt={article.excerpt}
-        isPreview={false}
+        isPreview={true}
       />
 
       {/* Trending Articles */}
