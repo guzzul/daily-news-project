@@ -99,7 +99,6 @@ export async function searchArticles(search?: string, category?: string) {
   const baseUrl = `${BASE_URL}/articles`;
   const fullUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
-  console.log("Searching articles with URL:", fullUrl);
   try {
     const response = await apiFetch(fullUrl, {
       schema: ArticleListResponseSchema,

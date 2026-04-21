@@ -14,6 +14,7 @@ import {
   getArticleBySlug,
   getTrendingArticles,
 } from "@/lib/services/article.service";
+import { fa } from "zod/locales";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -64,15 +65,6 @@ export async function generateMetadata({
         ],
       },
 
-      // Twitter Card
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: [article.image],
-      },
-
-      // Extra SEO signals
       category: article.category,
       keywords: [...(article.tags || [])].filter(Boolean),
     };
@@ -108,19 +100,20 @@ export async function generateStaticParams() {
  * Page Shell
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
+  const { slug } = await params;
+
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
-        <ArticleWrapper params={params} />
+        <ArticleWrapper slug={slug} />
       </Suspense>
     </article>
   );
 }
 
-async function ArticleWrapper({ params }: ArticlePageProps) {
+async function ArticleWrapper({ slug }: { slug: string }) {
   "use cache";
   cacheLife("days");
-  const { slug } = await params;
   cacheTag("articles", `article-${slug}`);
 
   // Fetch article and trending articles in parallel to optimize load time.
@@ -157,8 +150,12 @@ async function ArticleWrapper({ params }: ArticlePageProps) {
         />
       </div>
 
-      {/* Article Content - Using Tailwind Typography (prose) */}
-      <ArticleContent content={article.content} />
+      {/* Article Content */}
+      <ArticleContent
+        content={article.content}
+        excerpt={article.excerpt}
+        isPreview={false}
+      />
 
       {/* Trending Articles */}
       {trendingArticles.length > 0 && (

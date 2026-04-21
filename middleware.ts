@@ -23,7 +23,7 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith("/api/") && isValidPath(pathname)) {
     const apiPath = pathname.replace("/api", "");
     const externalEndpoint = new URL(
-      `${process.env.API_BASE_URL}${apiPath}${search}`,
+      `${process.env.VERCEL_NEWS_API_ENDPOINT_URL}${apiPath}${search}`,
     );
 
     // Create a new Headers object based on the original
@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
     // INJECT the secret header for authentication
     modifiedHeaders.set(
       "x-vercel-protection-bypass",
-      `${process.env.API_TOKEN || ""}`,
+      `${process.env.VERCEL_NEWS_API_TOKEN || ""}`,
     );
 
     // Forward the request with the new headers

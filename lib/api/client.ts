@@ -2,6 +2,8 @@ import { z } from "zod";
 import { retry } from "./retry";
 import { ApiError } from "./errors";
 
+import { VERCEL_NEWS_API_ENDPOINT_URL, VERCEL_NEWS_API_TOKEN, DEFAULT_RETRIES } from "../../lib/consts";
+
 type FetchOptions<T> = {
   schema: z.ZodSchema<T>;
   init?: RequestInit;
@@ -23,6 +25,7 @@ export async function apiFetch<T>(
   options: FetchOptions<T>,
 ): Promise<T> {
   const { schema, init, next, retries = 2 } = options;
+  console.log(`Fetching URL: ${url} with options:`, { init, next, retries });
 
   const fetcher = async () => {
     const res = await fetch(url, {
@@ -30,6 +33,7 @@ export async function apiFetch<T>(
       next,
       headers: {
         "Content-Type": "application/json",
+        "x-vercel-protection-bypass": `${VERCEL_NEWS_API_TOKEN || ""}`,
         ...(init?.headers || {}),
       },
     });
