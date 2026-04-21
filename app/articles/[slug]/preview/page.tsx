@@ -5,11 +5,13 @@ import Image from "next/image";
 import { cacheTag, cacheLife } from "next/cache";
 
 import { ArticleHeader } from "@/components/article-header";
-import { SubscribeBanner } from "@/components/subscribe-banner";
 import { ArticleContent } from "@/components/article-content";
+import { SubscriptionCard } from "@/components/subscribe-card";
 import {
+  getAllArticles,
   getArticleBySlug,
 } from "@/lib/services/article.service";
+import { Article } from "@/lib/schemas/article.schema";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -19,9 +21,10 @@ export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
+  const normalizedSlug = slug.replace(/%2Fpreview$/, "");
 
   try {
-    const { response } = await getArticleBySlug(slug);
+    const { response } = await getArticleBySlug(normalizedSlug);
 
     if (!response?.data) {
       return {
@@ -39,7 +42,7 @@ export async function generateMetadata({
       description,
 
       alternates: {
-        canonical: `/articles/${slug}/preview`,
+        canonical: `/articles/${normalizedSlug}/preview`,
       },
 
       // Open Graph (Facebook, LinkedIn, etc.)
@@ -47,7 +50,7 @@ export async function generateMetadata({
         title,
         description,
         type: "article",
-        url: `/articles/${slug}/preview`,
+        url: `/articles/${normalizedSlug}/preview`,
         publishedTime: article.publishedAt,
         authors: article.author ? [article.author.name] : [],
         images: [
@@ -72,6 +75,27 @@ export async function generateMetadata({
 }
 
 /**
+ * Static Params {SSG}
+ */
+
+export async function generateStaticParams() {
+  const { response, error } = await getAllArticles();
+
+  // If the API is down during build, return an empty array.
+  // This prevents the build from crashing.
+  if (error || !response?.data) {
+    console.warn(
+      "Could not fetch articles for static params. Falling back to dynamic generation.",
+    );
+    return [];
+  }
+
+  return response.data.map((article: Article) => ({
+    slug: article.slug + "/preview",
+  }));
+}
+
+/**
  * Page Shell
  */
 export default async function ArticlePreviewPage({ params }: ArticlePageProps) {
@@ -87,12 +111,16 @@ export default async function ArticlePreviewPage({ params }: ArticlePageProps) {
 async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
   "use cache";
   const { slug } = await params;
-  
+
+  // Clean the slug by removing the "/preview" suffix if it exists
+  const normalizedSlug = slug.replace(/%2Fpreview$/, "");
+  console.log(`Normalized slug: ${normalizedSlug}`);
+
   cacheLife("days");
-  cacheTag("articles", `article-${slug}-preview`);
+  cacheTag("articles", `article-${normalizedSlug}-preview`);
 
   // Fetch article and trending articles in parallel to optimize load time.
-  const { response, error } = await getArticleBySlug(slug);
+  const { response, error } = await getArticleBySlug(normalizedSlug);
 
   // If there's an error fetching the article or the article doesn't exist, show a 404 page.
   if (error || !response?.data) {
@@ -100,7 +128,6 @@ async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
   }
 
   const article = response?.data;
-  const isSubscribed = false;
 
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
@@ -128,9 +155,10 @@ async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
         isPreview={true}
       />
 
-      {/* Conditional Subscribe CTA */}
-      {!isSubscribed && <SubscribeBanner />}
-
+      {/* Subscription Card */}
+      <div className="pt-16">
+        <SubscriptionCard slug={normalizedSlug} isSubscribed={false} />
+      </div>
     </article>
   );
 }

@@ -24,7 +24,7 @@ export async function apiFetch<T>(
   url: string,
   options: FetchOptions<T>,
 ): Promise<T> {
-  const { schema, init, next, retries = 2 } = options;
+  const { schema, init, next, retries = DEFAULT_RETRIES } = options;
   const fetcher = async () => {
     const res = await fetch(url, {
       ...init,

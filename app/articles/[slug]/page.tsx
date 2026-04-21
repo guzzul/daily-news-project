@@ -5,9 +5,9 @@ import Image from "next/image";
 import { cacheTag, cacheLife } from "next/cache";
 
 import { ArticleHeader } from "@/components/article-header";
-import { SubscribeBanner } from "@/components/subscribe-banner";
 import { ArticleContent } from "@/components/article-content";
 import { ArticleGrid } from "@/components/article-grid";
+import { SubscriptionCard } from "@/components/subscribe-card";
 import { Article } from "@/lib/schemas/article.schema";
 import {
   getAllArticles,
@@ -99,8 +99,6 @@ export async function generateStaticParams() {
  * Page Shell
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  //const { slug } = await params;
-
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
@@ -130,7 +128,6 @@ async function ArticleWrapper({ params }: ArticlePageProps) {
 
   const article = articleResponse?.data;
   const trendingArticles = trendingResponse?.data?.slice(0, 3) || [];
-  const isSubscribed = false;
 
   return (
     <article className="container max-w-4xl mx-auto px-4 pb-24">
@@ -163,8 +160,8 @@ async function ArticleWrapper({ params }: ArticlePageProps) {
         <ArticleGrid label="Trending Now" articles={trendingArticles} />
       )}
 
-      {/* Conditional Subscribe CTA */}
-      {!isSubscribed && <SubscribeBanner />}
+        {/* Subscription Card */}
+      <SubscriptionCard slug={slug} isSubscribed={true} />
 
     </article>
   );
