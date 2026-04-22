@@ -2,7 +2,7 @@ import { z } from "zod";
 import { retry } from "./retry";
 import { ApiError } from "./errors";
 
-import { VERCEL_NEWS_API_ENDPOINT_URL, VERCEL_NEWS_API_TOKEN, DEFAULT_RETRIES } from "../../lib/consts";
+import { VERCEL_NEWS_API_TOKEN, DEFAULT_RETRIES } from "../../lib/consts";
 
 type FetchOptions<T> = {
   schema: z.ZodSchema<T>;

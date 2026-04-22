@@ -11,7 +11,7 @@ export default function SearchPage({
   searchParams: Promise<{ query?: string; category?: string }>;
 }) {
   return (
-    <Suspense fallback={<div>Loading search...</div>}>
+    <Suspense fallback={<div className="container max-w-6xl mx-auto px-4 py-12"><SearchLoading /></div>}>
       <SearchWrapper searchParams={searchParams} />
     </Suspense>
   );

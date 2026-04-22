@@ -14,6 +14,7 @@ import {
   getArticleBySlug,
   getTrendingArticles,
 } from "@/lib/services/article.service";
+import { NEWS_SITE_BASE_URL } from "@/lib/consts";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -43,7 +44,7 @@ export async function generateMetadata({
       description,
 
       alternates: {
-        canonical: `/articles/${slug}`,
+        canonical: `${NEWS_SITE_BASE_URL}/articles/${slug}`,
       },
 
       // Open Graph (Facebook, LinkedIn, etc.)
@@ -51,7 +52,7 @@ export async function generateMetadata({
         title,
         description,
         type: "article",
-        url: `/articles/${slug}`,
+        url: `${NEWS_SITE_BASE_URL}/articles/${slug}`,
         publishedTime: article.publishedAt,
         authors: article.author ? [article.author.name] : [],
         images: [
