@@ -1,14 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Triangle, Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Triangle, Menu, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", title: "Home" },
   { href: "/search", title: "Search" },
 ];
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return <div className="w-9 h-9" />;
+
+  return (
+    <button
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      className="p-2 rounded-md hover:bg-accent transition"
+      aria-label="Toggle theme"
+    >
+      {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+    </button>
+  );
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -25,7 +45,6 @@ export function Header() {
             >
               <Triangle className="size-full fill-current" />
             </div>
-
             <span className="font-semibold text-sm whitespace-nowrap relative top-[1px]">
               Guzzul Daily
             </span>
@@ -47,10 +66,11 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="ml-auto md:hidden">
+        <div className="ml-auto flex items-center gap-1">
+          <ThemeToggle />
           <button
             onClick={() => setOpen(!open)}
-            className="p-2 rounded-md hover:bg-accent transition"
+            className="p-2 rounded-md hover:bg-accent transition md:hidden"
             aria-label="Toggle Menu"
           >
             {open ? <X /> : <Menu />}
