@@ -15,15 +15,18 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="w-full flex h-16 items-center px-4">
+      <div className="container mx-auto px-4 flex h-16 items-center">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <div
-              className="flex aspect-square h-8 items-center justify-center rounded-lg bg-black text-white dark:bg-white dark:text-black p-1.5"
+              className="flex h-8 w-8 items-center justify-center rounded-lg 
+              bg-black text-white dark:bg-white dark:text-black 
+              p-1.5 shrink-0"
             >
               <Triangle className="size-full fill-current" />
             </div>
-            <span className="font-semibold text-sm whitespace-nowrap">
+
+            <span className="font-semibold text-sm whitespace-nowrap relative top-[1px]">
               Guzzul Daily
             </span>
           </Link>
@@ -57,7 +60,7 @@ export function Header() {
 
       {open && (
         <div className="md:hidden border-t bg-background">
-          <div className="container py-4 flex flex-col gap-2">
+          <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.title}
