@@ -21,10 +21,9 @@ export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const normalizedSlug = slug.replace(/%2Fpreview$/, "");
 
   try {
-    const { response } = await getArticleBySlug(normalizedSlug);
+    const { response } = await getArticleBySlug(slug);
 
     if (!response?.data) {
       return {
@@ -42,7 +41,7 @@ export async function generateMetadata({
       description,
 
       alternates: {
-        canonical: `/articles/${normalizedSlug}/preview`,
+        canonical: `/articles/${slug}/preview`,
       },
 
       // Open Graph (Facebook, LinkedIn, etc.)
@@ -50,7 +49,7 @@ export async function generateMetadata({
         title,
         description,
         type: "article",
-        url: `/articles/${normalizedSlug}/preview`,
+        url: `/articles/${slug}/preview`,
         publishedTime: article.publishedAt,
         authors: article.author ? [article.author.name] : [],
         images: [
@@ -91,7 +90,7 @@ export async function generateStaticParams() {
   }
 
   return response.data.map((article: Article) => ({
-    slug: article.slug + "/preview",
+    slug: article.slug,
   }));
 }
 
@@ -112,15 +111,11 @@ async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
   "use cache";
   const { slug } = await params;
 
-  // Clean the slug by removing the "/preview" suffix if it exists
-  const normalizedSlug = slug.replace(/%2Fpreview$/, "");
-  console.log(`Normalized slug: ${normalizedSlug}`);
-
   cacheLife("days");
-  cacheTag("articles", `article-${normalizedSlug}-preview`);
+  cacheTag("articles", `article-${slug}-preview`);
 
   // Fetch article and trending articles in parallel to optimize load time.
-  const { response, error } = await getArticleBySlug(normalizedSlug);
+  const { response, error } = await getArticleBySlug(slug);
 
   // If there's an error fetching the article or the article doesn't exist, show a 404 page.
   if (error || !response?.data) {
@@ -157,7 +152,7 @@ async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
 
       {/* Subscription Card */}
       <div className="pt-16">
-        <SubscriptionCard slug={normalizedSlug} isSubscribed={false} />
+        <SubscriptionCard slug={slug} isSubscribed={false} />
       </div>
     </article>
   );
