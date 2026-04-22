@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,6 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
 
   // Combine "All Categories" with the props data
   // useMemo ensures we don't re-calculate this unless categories change
@@ -53,9 +52,7 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
       else params.delete("category");
     }
 
-    startTransition(() => {
-      router.push(`${pathname}?${params.toString()}`);
-    });
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   // Auto-search trigger (3+ characters)
@@ -80,11 +77,6 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
           onChange={(e) => setTerm(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && updateSearch(term)}
         />
-        {isPending && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          </div>
-        )}
       </div>
 
       <Select
@@ -106,7 +98,6 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
       <Button
         onClick={() => updateSearch(term)}
         className="rounded-none uppercase font-bold"
-        disabled={isPending}
       >
         Search
       </Button>

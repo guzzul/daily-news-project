@@ -92,7 +92,6 @@ export async function getTrendingArticles() {
 export async function searchArticles(search?: string, category?: string) {
   "use cache";
   cacheLife("minutes");
-  console.log(`Searching articles with term: "${search}" and category: "${category}"`);
   cacheTag(`article-search-${category || "all"}-${search || "all"}`);
 
   const params: Record<string, string> = {};
