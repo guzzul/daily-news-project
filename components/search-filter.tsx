@@ -37,10 +37,7 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
   const currentCategory = searchParams.get("category") || "all";
 
   // Reconstruct query string based on current search params and new values
-  const buildQueryString = (next: {
-    query?: string;
-    category?: string;
-  }) => {
+  const buildQueryString = (next: { query?: string; category?: string }) => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (next.query !== undefined) {
@@ -78,6 +75,10 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
 
     return () => clearTimeout(handler);
   }, [term]);
+
+  useEffect(() => {
+    setTerm(searchParams.get("query") || "");
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col md:flex-row gap-3 mb-10">
