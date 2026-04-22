@@ -87,9 +87,14 @@ export async function getTrendingArticles() {
   }
 }
 
-
-// No caching for search results since they can vary widely and may not be reused often
+// This function is used by the SearchFilters component to fetch articles based on search term and category
+// It is designed to be flexible and efficient, with caching based on category and search parameters
 export async function searchArticles(search?: string, category?: string) {
+  "use cache";
+  cacheLife("minutes");
+  console.log(`Searching articles with term: "${search}" and category: "${category}"`);
+  cacheTag(`article-search-${category || "all"}-${search || "all"}`);
+
   const params: Record<string, string> = {};
   if (search) params.search = search;
   if (category && category !== "all") params.category = category;

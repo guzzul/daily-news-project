@@ -64,7 +64,7 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
       if (term.length >= 3 || term.length === 0) {
         updateSearch(term);
       }
-    }, 400); // 400ms debounce
+    }, 100); // 100ms debounce
 
     return () => clearTimeout(delayDebounceFn);
   }, [term]);

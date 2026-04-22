@@ -115,7 +115,6 @@ async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
   cacheLife("days");
   cacheTag("articles", `article-${slug}-preview`);
 
-  // Fetch article and trending articles in parallel to optimize load time.
   const { response, error } = await getArticleBySlug(slug);
 
   // If there's an error fetching the article or the article doesn't exist, show a 404 page.
