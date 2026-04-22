@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 import NewsHero from "@/components/news-hero";
 import NewsBanner from "@/components/news-banner";
 import { ArticleGrid }  from "@/components/article-grid";
@@ -8,15 +9,15 @@ import {
 } from "@/lib/services/article.service";
 
 export const metadata = {
-  title: "Daily News - Stay Informed with the Latest Headlines",
+  title: "The Guzzul Daily | News and insights for modern web developers",
   description:
-    "Your go-to source for the latest news, in-depth analysis, and expert insights. Stay informed with our comprehensive coverage of global events, technology, business, and more.",
+    "Engineering deep dives, changelogs, customer stories, and community updates for modern web developers. Join 50,000+ daily readers across the globe.",
 };
 
 function BannerSkeleton() {
   return (
-    <div className="w-full animate-pulse rounded-md bg-muted/50 p-4 text-center">
-      Loading breaking news...
+    <div className="flex w-full items-center justify-center rounded-md bg-muted/50 p-4">
+      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
     </div>
   );
 }

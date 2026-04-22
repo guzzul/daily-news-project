@@ -1,9 +1,26 @@
 import { Suspense } from "react";
+import { Metadata } from "next";
 import { SearchFilters } from "@/components/search-filter";
-
 import { SearchLoading } from "@/components/search-loading";
 import { SearchResults } from "@/components/search-result";
 import { getCategories } from "@/lib/services/category.service";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ query?: string; category?: string }>;
+}): Promise<Metadata> {
+  const { query, category } = await searchParams;
+
+  return {
+    title: query
+      ? `Search results for "${query}" | The Guzzul Daily`
+      : "Search Articles | The Guzzul Daily",
+    description: query
+      ? `Explore the latest news and insights about "${query}" on The Guzzul Daily.`
+      : "Search through 50,000+ developer stories, deep dives, and community updates.",
+  };
+}
 
 export default function SearchPage({
   searchParams,
