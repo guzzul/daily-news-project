@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -74,7 +74,7 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
       if (term.length >= 3 || term.length === 0) {
         navigate({ query: term });
       }
-    }, 350);
+    }, 300);
 
     return () => clearTimeout(handler);
   }, [term]);
@@ -90,6 +90,11 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
           onChange={(e) => setTerm(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && navigate({ query: term })}
         />
+        {isPending && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          </div>
+        )}
       </div>
 
       <Select
@@ -113,7 +118,7 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
         className="rounded-none uppercase font-bold"
         disabled={isPending}
       >
-        {isPending ? "Searching..." : "Search"}
+        {"Search"}
       </Button>
     </div>
   );
