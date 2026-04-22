@@ -101,11 +101,13 @@ export async function generateStaticParams() {
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
-    <article className="container max-w-6xl mx-auto px-4 pb-24">
-      <Suspense fallback={<div>Loading article...</div>}>
-        <ArticleWrapper params={params} />
-      </Suspense>
-    </article>
+    <main className="mx-auto max-w-6xl px-4 pb-24">
+      <article>
+        <Suspense fallback={<div>Loading article...</div>}>
+          <ArticleWrapper params={params} />
+        </Suspense>
+      </article>
+    </main>
   );
 }
 
@@ -161,9 +163,8 @@ async function ArticleWrapper({ params }: ArticlePageProps) {
         <ArticleGrid label="Trending Now" articles={trendingArticles} />
       )}
 
-        {/* Subscription Card */}
+      {/* Subscription Card */}
       <SubscriptionCard slug={slug} isSubscribed={true} />
-
     </article>
   );
 }

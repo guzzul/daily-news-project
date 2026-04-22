@@ -2,7 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { cn } from "@/lib/utils";
@@ -10,12 +10,12 @@ import { cn } from "@/lib/utils";
 const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
-})
+});
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-})
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,7 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn("antialiased", fontMono.variable, "font-sans", fontSans.variable)}
+        className={cn(
+          "min-h-screen bg-zinc-50 antialiased dark:bg-black",
+          fontMono.variable,
+          fontSans.variable,
+          "font-sans",
+        )}
       >
         <ThemeProvider>
           <Header />
