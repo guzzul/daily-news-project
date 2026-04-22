@@ -101,7 +101,7 @@ export async function generateStaticParams() {
  */
 export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
-    <article className="container max-w-4xl mx-auto px-4 pb-24">
+    <article className="container max-w-6xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
         <ArticleWrapper params={params} />
       </Suspense>
@@ -131,7 +131,7 @@ async function ArticleWrapper({ params }: ArticlePageProps) {
   const trendingArticles = trendingResponse?.data?.slice(0, 3) || [];
 
   return (
-    <article className="container max-w-4xl mx-auto px-4 pb-24">
+    <article className="container max-w-6xl mx-auto px-4 pb-24">
       <ArticleHeader
         title={article.title}
         category={article.category}

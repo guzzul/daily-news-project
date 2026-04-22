@@ -100,7 +100,7 @@ export async function generateStaticParams() {
  */
 export default async function ArticlePreviewPage({ params }: ArticlePageProps) {
   return (
-    <article className="container max-w-4xl mx-auto px-4 pb-24">
+    <article className="container max-w-6xl mx-auto px-4 pb-24">
       <Suspense fallback={<div>Loading article...</div>}>
         <ArticlePreviewWrapper params={params} />
       </Suspense>
@@ -125,7 +125,7 @@ async function ArticlePreviewWrapper({ params }: ArticlePageProps) {
   const article = response?.data;
 
   return (
-    <article className="container max-w-4xl mx-auto px-4 pb-24">
+    <article className="container max-w-6xl mx-auto px-4 pb-24">
       <ArticleHeader
         title={article.title}
         category={article.category}

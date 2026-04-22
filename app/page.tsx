@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import NewsHero from "@/components/news-hero";
 import NewsBanner from "@/components/news-banner";
-import { ArticleGrid }  from "@/components/article-grid";
+import { ArticleGrid } from "@/components/article-grid";
 import {
   getFeaturedStory,
   getFeaturedArticles,
@@ -33,7 +33,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="gap-6 flex min-h-screen w-full max-w-7xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+      <main className="gap-6 flex min-h-screen w-full max-w-6xl flex-col items-center justify-between py-12 px-4 bg-white dark:bg-black sm:items-start">
         <div className="w-full">
           <Suspense fallback={<BannerSkeleton />}>
             <NewsBanner />

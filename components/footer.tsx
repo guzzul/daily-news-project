@@ -10,13 +10,13 @@ export async function Footer() {
     <footer className="w-full bg-background border-t">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          {/* Brand/Logo Section */}
+          
           <div className="flex flex-col items-center md:items-start gap-2">
             <Link href="/" className="text-xl font-bold tracking-tight">
               Guzzul Daily
             </Link>
             <p className="text-sm text-muted-foreground text-center md:text-left">
-              Where Breaking News Breaks First.
+              The Pulse of Modern Web Engineering.
             </p>
           </div>
 
