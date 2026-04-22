@@ -37,22 +37,11 @@ export default function NewsHero({ featuredStory }: NewsHeroProps) {
             {/* Call to Actions */}
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button asChild size="lg" className="px-8">
-                <Link href="/articles">
+                <Link href="/search">
                   Browse All Articles
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-
-              <div className="flex w-full max-w-sm items-center space-x-2">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="bg-background"
-                />
-                <Button variant="outline" type="submit">
-                  Subscribe
-                </Button>
-              </div>
             </div>
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
