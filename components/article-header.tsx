@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { CalendarDays } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {Author} from "@/lib/schemas/author.schema";
 
@@ -11,6 +12,8 @@ interface HeaderProps {
 }
 
 export function ArticleHeader({ title, author, date, category }: HeaderProps) {
+  const [year, month, day] = date.split('T')[0].split('-');
+  const dateStr = `${month}/${day}/${year}`;
   return (
     <header className="space-y-6 pt-8 pb-4">
       <Badge variant="outline" className="rounded-none uppercase tracking-widest px-3 py-1 font-bold border-primary text-primary">
@@ -32,8 +35,11 @@ export function ArticleHeader({ title, author, date, category }: HeaderProps) {
           </div>
         </div>
         
-        <div className="text-sm text-muted-foreground font-medium uppercase tracking-tighter">
-          Published {date}
+        <div className="text-sm text-muted-foreground flex gap-2 font-medium uppercase tracking-tighter">
+          <CalendarDays className="h-4 w-4" />
+          <span className="text-xs font-medium uppercase tracking-tight">
+            {dateStr}
+          </span>
         </div>
       </div>
       <Separator className="h-[2px] bg-foreground/10" />

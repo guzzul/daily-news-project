@@ -45,7 +45,7 @@ export function ArticleCard({ article }: ArticleProps) {
           </Link>
         </CardHeader>
 
-        <CardFooter className="p-0 mt-6 flex items-center gap-2 text-muted-foreground border-t pt-4">
+        <CardFooter className="p-0 mt-6 flex items-center gap-2 text-muted-foreground border-t py-2 rounded-none">
           <CalendarDays className="h-4 w-4" />
           <span className="text-xs font-medium uppercase tracking-tight">
             {dateStr}
