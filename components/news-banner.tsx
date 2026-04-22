@@ -12,9 +12,9 @@ export default async function NewsBanner() {
   const breakingNewsResponse = await getBreakingNews();
   const breakingNews = breakingNewsResponse?.data;
 
-  if (breakingNewsResponse?.success !== true || !breakingNews) {
-    return null; // Don't render the banner if there's an error or no data
-  }
+if (!breakingNewsResponse?.success || !breakingNews) {
+  return null;
+}
 
   return (
     <div className="w-full border-b bg-muted/40 transition-all duration-300">
@@ -29,7 +29,7 @@ export default async function NewsBanner() {
           </Badge>
 
           <Link
-            href={`/articles/${breakingNews?.articleId}`}
+            href={`/articles/${breakingNews?.id}`}
             className="group flex items-center gap-2 overflow-hidden text-sm font-medium hover:text-primary transition-colors"
           >
             <Megaphone className="h-4 w-4 shrink-0 text-primary" />

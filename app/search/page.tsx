@@ -14,7 +14,7 @@ export default function SearchPage({
     <main className="container max-w-6xl mx-auto px-4 py-12">
       <header className="mb-12">
         <h1 className="text-5xl font-extrabold tracking-tighter mb-4">
-          SEARCH
+          Search
         </h1>
         <p className="text-muted-foreground">
           Use the search bar and filters to find stories that interest you.
