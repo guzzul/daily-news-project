@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Loader2 } from "lucide-react";
+import { Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -24,46 +24,59 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Combine "All Categories" with the props data
-  // useMemo ensures we don't re-calculate this unless categories change
+  const [isPending, startTransition] = useTransition();
+
   const categoryOptions = useMemo(() => {
-    const formattedCategories = categories.map(({ name, slug }) => ({
-      name,
-      slug,
-    }));
-    return [{ name: "All Categories", slug: "all" }, ...formattedCategories];
+    return [
+      { name: "All Categories", slug: "all" },
+      ...categories.map(({ name, slug }) => ({ name, slug })),
+    ];
   }, [categories]);
 
-  // Local state for the input to allow fast typing
   const [term, setTerm] = useState(searchParams.get("query") || "");
   const currentCategory = searchParams.get("category") || "all";
 
-  // Sync URL function
-  const updateSearch = (query?: string, category?: string) => {
-    const params = new URLSearchParams(searchParams);
+  // Reconstruct query string based on current search params and new values
+  const buildQueryString = (next: {
+    query?: string;
+    category?: string;
+  }) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-    if (query !== undefined) {
-      if (query) params.set("query", query);
+    if (next.query !== undefined) {
+      const value = next.query.trim();
+      if (value) params.set("query", value);
       else params.delete("query");
     }
 
-    if (category !== undefined) {
-      if (category !== "all") params.set("category", category);
+    if (next.category !== undefined) {
+      if (next.category !== "all") params.set("category", next.category);
       else params.delete("category");
     }
 
-    router.replace(`${pathname}?${params.toString()}`);
+    return params.toString();
   };
 
-  // Auto-search trigger (3+ characters)
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (term.length >= 3 || term.length === 0) {
-        updateSearch(term);
-      }
-    }, 50); // 50ms debounce
+  const navigate = (next: { query?: string; category?: string }) => {
+    const newQuery = buildQueryString(next);
+    const currentQuery = searchParams.toString();
 
-    return () => clearTimeout(delayDebounceFn);
+    if (newQuery === currentQuery) return; // prevent rerender
+
+    startTransition(() => {
+      router.replace(`${pathname}?${newQuery}`, { scroll: false });
+    });
+  };
+
+  // Debounced search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (term.length >= 3 || term.length === 0) {
+        navigate({ query: term });
+      }
+    }, 350);
+
+    return () => clearTimeout(handler);
   }, [term]);
 
   return (
@@ -75,13 +88,13 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
           className="pl-10 rounded-none border-foreground/20"
           value={term}
           onChange={(e) => setTerm(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && updateSearch(term)}
+          onKeyDown={(e) => e.key === "Enter" && navigate({ query: term })}
         />
       </div>
 
       <Select
         value={currentCategory}
-        onValueChange={(val) => updateSearch(undefined, val)}
+        onValueChange={(val) => navigate({ category: val })}
       >
         <SelectTrigger className="w-full md:w-[200px] rounded-none border-foreground/20">
           <SelectValue placeholder="Category" />
@@ -96,10 +109,11 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
       </Select>
 
       <Button
-        onClick={() => updateSearch(term)}
+        onClick={() => navigate({ query: term })}
         className="rounded-none uppercase font-bold"
+        disabled={isPending}
       >
-        Search
+        {isPending ? "Searching..." : "Search"}
       </Button>
     </div>
   );
