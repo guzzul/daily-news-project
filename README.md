@@ -139,19 +139,3 @@ Next.js 16's `cacheComponents` enabled in next.config.ts:
 | Fonts | Geist (Sans + Mono) |
 
 ---
-
-## Getting Started
-
-```bash
-# Install dependencies
-pnpm install
-
-# Run development server
-pnpm dev
-
-# Build for production
-pnpm build
-
-# Start production server
-pnpm start
-```
