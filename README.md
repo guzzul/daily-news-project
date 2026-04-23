@@ -1,4 +1,4 @@
-# The Guzzul Daily Project
+# The Guzzul Daily News Project
 
 A modern Next.js 16 news platform with subscription-gated content, dark mode, and advanced caching strategies.
 
