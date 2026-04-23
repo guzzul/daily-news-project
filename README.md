@@ -122,7 +122,6 @@ return parsed.data;
 Next.js 16's `cacheComponents` enabled in next.config.ts:
 
 - **ISR (Incremental Static Regeneration)**: Cache tags enable on-demand revalidation
-- **Image Optimization**: Vercel Blob storage integration
 - **SEO Optimized**: Dynamic metadata generation for articles
 
 ---
