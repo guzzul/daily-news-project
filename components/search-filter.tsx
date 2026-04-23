@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
 
 import { CategoryList } from "@/lib/schemas/category.schema";
 
@@ -36,7 +37,6 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
   const [term, setTerm] = useState(searchParams.get("query") || "");
   const currentCategory = searchParams.get("category") || "all";
 
-  // Reconstruct query string based on current search params and new values
   const buildQueryString = (next: { query?: string; category?: string }) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -58,14 +58,13 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
     const newQuery = buildQueryString(next);
     const currentQuery = searchParams.toString();
 
-    if (newQuery === currentQuery) return; // prevent rerender
+    if (newQuery === currentQuery) return;
 
     startTransition(() => {
       router.replace(`${pathname}?${newQuery}`, { scroll: false });
     });
   };
 
-  // Debounced search
   useEffect(() => {
     const handler = setTimeout(() => {
       if (term.length >= 3 || term.length === 0) {
@@ -81,46 +80,50 @@ export function SearchFilters({ categories }: SearchFiltersProps) {
   }, [searchParams]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-3 mb-10">
-      <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search articles..."
-          className="pl-10 rounded-none border-foreground/20"
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && navigate({ query: term })}
-        />
-        {isPending && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+    <Card className="w-full mb-10">
+      <CardContent className="pt-6 px-6 pb-4">
+        <div className="flex flex-col md:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search articles..."
+              className="pl-10"
+              value={term}
+              onChange={(e) => setTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && navigate({ query: term })}
+            />
+            {isPending && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      <Select
-        value={currentCategory}
-        onValueChange={(val) => navigate({ category: val })}
-      >
-        <SelectTrigger className="w-full md:w-[200px] rounded-none border-foreground/20">
-          <SelectValue placeholder="Category" />
-        </SelectTrigger>
-        <SelectContent className="rounded-none">
-          {categoryOptions.map((category) => (
-            <SelectItem key={category.slug} value={category.slug}>
-              {category.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+          <Select
+            value={currentCategory}
+            onValueChange={(val) => navigate({ category: val })}
+          >
+            <SelectTrigger className="w-full md:w-[200px]">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categoryOptions.map((category) => (
+                <SelectItem key={category.slug} value={category.slug}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-      <Button
-        onClick={() => navigate({ query: term })}
-        className="rounded-none uppercase font-bold"
-        disabled={isPending}
-      >
-        {"Search"}
-      </Button>
-    </div>
+          <Button
+            onClick={() => navigate({ query: term })}
+            disabled={isPending}
+          >
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Search
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
